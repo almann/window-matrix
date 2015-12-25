@@ -31,14 +31,37 @@ namespace {
   //
   #include "Images.h"
 
-  // draws an RGB array assuming row-ordered, progressive flattened array
+  inline uint16_t rgb_to_color(RGB const *pixel) {
+    return matrix.Color(pixel->r, pixel->g, pixel->b);
+  }
+
+  // draws an RGB array assuming column-ordered, progressive flattened array
   void draw_rgb_array(int const tile, RGB const *pixels) {
     int xOffset = tile * kMatrixCols;
     for (int x = 0; x < kMatrixCols; x++) {
-      for (int y = 0; y < kMatrixRows ; y++) {
-        uint16_t color = matrix.Color(pixels->r, pixels->g, pixels->b);
-        matrix.drawPixel(x + xOffset, y, color);
+      for (int y = 0; y < kMatrixRows; y++) {
+        matrix.drawPixel(x + xOffset, y, rgb_to_color(pixels));
         pixels++;
+      }
+    }
+  }
+
+  // draws a the old image shifted offset left with a new image in the shifted position 
+  void draw_left_marquee_rgb_array(int const tile, int offset, RGB const *left, RGB const *right) {
+    int xOffset = tile * kMatrixCols;
+    // left image
+    left += offset * kMatrixRows;
+    for (int x = 0; x < kMatrixCols - offset; x++) {
+      for (int y = 0; y < kMatrixRows; y++) {
+        matrix.drawPixel(x + xOffset, y, rgb_to_color(left));
+        left++;
+      }
+    }
+    // right image
+    for (int x = kMatrixCols - offset; x < kMatrixCols; x++) {
+      for (int y = 0; y < kMatrixRows; y++) {
+        matrix.drawPixel(x + xOffset, y, rgb_to_color(right));
+        right++;
       }
     }
   }
@@ -60,8 +83,15 @@ void loop() {
       draw_rgb_array(j, image_at(i + j));  
     }
     matrix.show();
-    delay(3000);
+    delay(2000);
 
     // transition to the next image
+    for (int offset = 0; offset < kMatrixCols; offset++) {
+      for (int j = 0; j < kMatrixTiles; j++) {
+        draw_left_marquee_rgb_array(j, offset, image_at(i + j), image_at(i + j + 1));
+      }
+      matrix.show();
+      delay(100);
+    }
   }
 }
