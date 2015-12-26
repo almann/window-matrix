@@ -79,19 +79,13 @@ void setup() {
 
 void loop() {
   for (int i = 0; i < kImageCount; i++) {
-    for (int j = 0; j < kMatrixTiles; j++) {
-      draw_rgb_array(j, image_at(i + j));  
-    }
-    matrix.show();
-    delay(2000);
-
     // transition to the next image
     for (int offset = 0; offset < kMatrixCols; offset++) {
       for (int j = 0; j < kMatrixTiles; j++) {
         draw_left_marquee_rgb_array(j, offset, image_at(i + j), image_at(i + j + 1));
       }
       matrix.show();
-      delay(100);
+      delay(80);
     }
   }
 }
