@@ -1,2 +1,7 @@
 .*
+*.sln
+*.vcxproj*
+/__vm/
+/Debug/
+/Release/
 /Images.h

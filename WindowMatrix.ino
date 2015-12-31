@@ -85,7 +85,7 @@ void loop() {
         draw_left_marquee_rgb_array(j, offset, image_at(i + j), image_at(i + j + 1));
       }
       matrix.show();
-      delay(80);
+      delay(60);
     }
   }
 }
