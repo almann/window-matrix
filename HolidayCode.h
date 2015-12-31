@@ -9,15 +9,24 @@
 // In particular, this p-code engine is implemented as a simple token threaded
 // code interpreter.
 //
-// The format of the p-code is represented as dfmt U16
+// The format of the p-code is represented as 'dfmt' U16_INT followed by any parameters
+// required in a list.
+//
+// For example:
+//   
+//   MARQUEE [ 60 /*ms delay*/ "..." /*image 1 in RGB octets, column major*/ "..." "..." ]
+//
+// Also part of this module is a simple command interface for storing winow matrix 'programs'
+// and configuring the micro-controller that can be tunneled through serial or as a simeple
+// RPC protocol over the WiFi interface.  The format is a 'dfmt' message in the p-code form above,
+// but has a synchronous response element that is a 'dfmt' message in the p-code form.
 //
 
 #include "DataFormat.h"
 
 namespace hcode {
-
-  // 'opcode' function pointer type for our p-code implementation
-  typedef void(*Operation)(dfmt::DataParser &in, dfmt::DataSerializer &out);
+  
+  
 }
 
 #endif
